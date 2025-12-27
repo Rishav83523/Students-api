@@ -1,0 +1,7 @@
+go mod init github.com/mr-raj2001/students-api
+→ Initializes a new Go module for the project and creates go.mod with the module’s import path.
+
+go get github.com/ilyakaznacheev/cleanenv
+→ Downloads the cleanenv dependency and records its version in go.mod and go.sum.
+
+

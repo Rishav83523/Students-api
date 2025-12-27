@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/mr-raj2001/students-api/internal/config"
+	"github.com/mr-raj2001/students-api/internal/http/handlers/student"
 )
 
 func main() {
@@ -22,11 +23,11 @@ func main() {
 	//net http package for setting up http server
 	router := http.NewServeMux()  //creating a new HTTP request multiplexer
 
-	router.HandleFunc("GET /",func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Welcome to student api"))
-	})//handler function with response writer and request pointer
-    
+	router.HandleFunc("POST /api/students",student.New())//handler function with response writer and request pointer
 
+	//we cleaned it by moving the handler function to internal/http/handlers/student/student.go file
+    
+    
 	//setup http server
 
 	server := http.Server {

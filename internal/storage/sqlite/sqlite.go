@@ -3,7 +3,7 @@ package sqlite
 import (
 	"database/sql"
 
-	_ "github.com/mattn/go-sqlite3" // just for intialization of sqlite3 driver so using _
+	_ "github.com/glebarez/sqlite" // pure-Go sqlite driver (no cgo)
 	"github.com/mr-raj2001/students-api/internal/config"
 )
 type Sqlite struct {
@@ -12,7 +12,7 @@ type Sqlite struct {
 
 
 func New (cfg *config.Config) (*Sqlite,error){ 
-	db,err := sql.Open("sqlite3", cfg.StoragePath)        // opening a connection to sqlite database using the storage path from config
+	db,err := sql.Open("sqlite", cfg.StoragePath)        // opening a connection to sqlite database using the storage path from config (glebarez driver)
      if err != nil {
 		return nil, err
 	 }

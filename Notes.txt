@@ -5,3 +5,4 @@ go get github.com/ilyakaznacheev/cleanenv
 → Downloads the cleanenv dependency and records its version in go.mod and go.sum.
 
 
+go get github.com/go-playground/validator/v10

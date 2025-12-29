@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/mr-raj2001/students-api/internal/types"
 	"github.com/mr-raj2001/students-api/internal/utils/response"
 )
@@ -31,8 +32,11 @@ func New() http.HandlerFunc {
 		}
 
 		//validate request by using request validator package playground
-		
-
+		if err := validator.New().Struct(student); err != nil {
+			validateErrs := err.(validator.ValidationErrors) //type assertion to get validation errors
+			response.Writejson(w, http.StatusBadRequest, response.ValidationError(validateErrs) )
+			return
+		}
 	
 		//in go we have to serialize the data in request body to struct
 		response.Writejson(w, http.StatusCreated, map[string]string{"success": "student created successfully"})  //sending response in json format with status code 201 using response package made by us

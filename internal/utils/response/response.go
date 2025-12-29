@@ -2,7 +2,11 @@ package response
 
 import (
 	"encoding/json"
+	"fmt" // Importing the fmt package
 	"net/http"
+	"strings"
+
+	"github.com/go-playground/validator/v10" // Importing the validator package
 )
 
 type Response struct {
@@ -30,4 +34,23 @@ func GeneralError( err error) Response {
 		Status: StatusError,
 		Error: err.Error(),
 	 }
+}
+
+
+func ValidationError( errs validator.ValidationErrors) Response { 
+      var errMsgs []string
+
+	  for _, e := range errs {
+		switch e.ActualTag() {
+		case "required":
+			errMsgs = append(errMsgs,  fmt.Sprintf("The field %s is required", e.Field()))
+		case "email":
+			errMsgs = append(errMsgs,  fmt.Sprintf("The field %s must be a valid email address", e.Field()))    //e.Field() gives the field name
+		}
+	  }
+     
+	  return Response{
+		Status: StatusError,
+		Error: strings.Join(errMsgs, ", "),  //joining all the error messages with comma separator
+	  }
 }

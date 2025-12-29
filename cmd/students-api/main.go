@@ -12,6 +12,7 @@ import (
 
 	"github.com/mr-raj2001/students-api/internal/config"
 	"github.com/mr-raj2001/students-api/internal/http/handlers/student"
+	"github.com/mr-raj2001/students-api/internal/storage/sqlite"
 )
 
 func main() {
@@ -19,6 +20,13 @@ func main() {
 
 	cfg := config.MustLoad()  //calling the MustLoad function from config package to get the configuration
 	//databse setup
+
+	_, err := sqlite.New(cfg)
+	if err != nil {
+		log.Fatalf("failed to setup storage: %s", err.Error())
+	}
+
+	slog.Info("Storage setup completed")
 	//setup router
 	//net http package for setting up http server
 	router := http.NewServeMux()  //creating a new HTTP request multiplexer
@@ -63,8 +71,8 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5 * time.Second)  //creating a context with timeout for graceful shutdown , empty starting point 
     defer cancel()
 
-	err := server.Shutdown(ctx)  //gracefully shutting down the server and recieve context if not cleased in 5 second and throw error for us 
-    //sometimes infinite wait so we use context with timeout
+	err = server.Shutdown(ctx)  //gracefully shutting down the server and recieve context if not cleased in 5 second and throw error for us 
+	//sometimes infinite wait so we use context with timeout
 	
 
 	if err != nil {

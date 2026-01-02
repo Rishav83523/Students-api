@@ -9,11 +9,12 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/mr-raj2001/students-api/internal/storage"
 	"github.com/mr-raj2001/students-api/internal/types"
 	"github.com/mr-raj2001/students-api/internal/utils/response"
 )
 
-func New() http.HandlerFunc {
+func New(storage storage.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
         var student types.Student  //creating an instance of student struct from types package
@@ -37,8 +38,21 @@ func New() http.HandlerFunc {
 			response.Writejson(w, http.StatusBadRequest, response.ValidationError(validateErrs) )
 			return
 		}
+
+		lastid, err := storage.CreateStudent(
+			student.Name,
+			student.Email,
+			student.Age,
+		)
+
+		slog.Info("student created", slog.Int64("id", lastid))
+
+		if err != nil { 
+			response.Writejson(w, http.StatusInternalServerError, response.GeneralError(fmt.Errorf("failed to create student: %w", err)))
+			return
+		}
 	
 		//in go we have to serialize the data in request body to struct
-		response.Writejson(w, http.StatusCreated, map[string]string{"success": "student created successfully"})  //sending response in json format with status code 201 using response package made by us
+		response.Writejson(w, http.StatusCreated, map[string]string{"id": fmt.Sprintf("%d", lastid)})  //sending response in json format with status code 201 using response package made by us
 	}
 }

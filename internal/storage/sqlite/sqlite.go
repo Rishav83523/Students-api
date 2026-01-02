@@ -33,3 +33,27 @@ func New (cfg *config.Config) (*Sqlite,error){
 
 }
 
+
+// Implementing the Storage interface's CreateStudent method
+func (s *Sqlite) CreateStudent(name string, email string, age int) (int64, error) {
+
+	// Inserting a new student record into the students table
+	stmt, err := s.Db.Prepare("INSERT INTO students (name,email,age) VALUES (?,?,?)")
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()   // ensuring the statement is closed after execution
+
+	result, err := stmt.Exec(name, email, age)
+	if err != nil {
+		return 0, err
+	}
+
+     id, err := result.LastInsertId()
+
+	 if err != nil {
+		return 0, err
+	 }
+
+	return id, nil
+}

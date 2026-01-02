@@ -32,7 +32,8 @@ func main() {
 	router := http.NewServeMux()  //creating a new HTTP request multiplexer
 
 	router.HandleFunc("POST /api/students",student.New(storage))//handler function with response writer and request pointer
-    router.HandleFunc("GET /api/students/{id}",student.GetById(storage))
+	router.HandleFunc("GET /api/students/{id}",student.GetById(storage))
+	router.HandleFunc("GET /api/students",student.GetStudentList(storage))
 	//we cleaned it by moving the handler function to internal/http/handlers/student/student.go file
     
     

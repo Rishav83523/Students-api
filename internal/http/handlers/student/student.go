@@ -85,3 +85,22 @@ func GetById (storage storage.Storage) http.HandlerFunc {
 }
 
 }
+
+
+
+func GetStudentList (storage storage.Storage) http.HandlerFunc {
+	return func (w http.ResponseWriter, r *http.Request) { 
+        
+		slog.Info("getting list of students")
+
+		student, err := storage.GetStudentList()
+
+	if err != nil {
+		response.Writejson(w, http.StatusInternalServerError, response.GeneralError(fmt.Errorf("failed to get student list: %w", err)))
+		return
+	}
+
+	response.Writejson(w, http.StatusOK, student) //sending response in json format with status code 200 using response package made by us
+}
+
+}

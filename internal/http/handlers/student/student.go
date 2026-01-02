@@ -7,6 +7,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/mr-raj2001/students-api/internal/storage"
@@ -55,4 +56,32 @@ func New(storage storage.Storage) http.HandlerFunc {
 		//in go we have to serialize the data in request body to struct
 		response.Writejson(w, http.StatusCreated, map[string]string{"id": fmt.Sprintf("%d", lastid)})  //sending response in json format with status code 201 using response package made by us
 	}
+}
+
+
+func GetById (storage storage.Storage) http.HandlerFunc {
+	return func (w http.ResponseWriter, r *http.Request) { 
+        
+		//get id from url path
+		id := r.PathValue("id")
+
+
+
+		slog.Info("geeting a student", slog.String("id",id))
+
+		intId, err := strconv.ParseInt(id, 10, 64) //converting string id to int64
+		if err != nil {
+			response.Writejson(w, http.StatusBadRequest, response.GeneralError(fmt.Errorf("invalid id format: %w", err)))
+			return
+		}
+
+		student, err := storage.GetStudentById(intId)
+	if err != nil {
+		response.Writejson(w, http.StatusInternalServerError, response.GeneralError(fmt.Errorf("failed to get student: %w", err)))
+		return
+	}
+
+	response.Writejson(w, http.StatusOK, student) //sending response in json format with status code 200 using response package made by us
+}
+
 }

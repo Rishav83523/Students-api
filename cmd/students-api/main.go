@@ -21,7 +21,7 @@ func main() {
 	cfg := config.MustLoad()  //calling the MustLoad function from config package to get the configuration
 	//databse setup
 
-	storage, err := sqlite.New(cfg)
+	storage, err := sqlite.New(cfg)  //we can switch to any other storage by changing this line only as we are using interface
 	if err != nil {
 		log.Fatalf("failed to setup storage: %s", err.Error())
 	}
@@ -32,7 +32,7 @@ func main() {
 	router := http.NewServeMux()  //creating a new HTTP request multiplexer
 
 	router.HandleFunc("POST /api/students",student.New(storage))//handler function with response writer and request pointer
-
+    router.HandleFunc("GET /api/students/{id}",student.GetById(storage))
 	//we cleaned it by moving the handler function to internal/http/handlers/student/student.go file
     
     

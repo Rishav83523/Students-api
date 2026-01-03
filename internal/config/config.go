@@ -25,7 +25,7 @@ func MustLoad() *Config {
 
 	configPath = os.Getenv("CONFIG_PATH")  // basically we are checking if config path is set in env variable for the command we write in terminal
 
-	if configPath == "" {
+	if configPath == "" {   //checking if env is empty then go inside condition and parse command line arguments
 		flags := flag.String("config", "", "path to the configuration file")
 		flag.Parse()  //parsing the command line arguments
 

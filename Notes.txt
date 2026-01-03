@@ -9,3 +9,6 @@ go get github.com/go-playground/validator/v10
 
 
 go get github.com/mattn/go-sqlite3
+
+
+go run cmd/students-api/main.go -config config/local.yaml

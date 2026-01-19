@@ -12,3 +12,15 @@ go get github.com/mattn/go-sqlite3
 
 
 go run cmd/students-api/main.go -config config/local.yaml
+
+
+
+
+Go Interface-Based Storage Pattern
+
+Define a Storage interface (storage.go) with methods like CreateStudent, GetStudentById, and GetStudentList.
+Implement the interface in a concrete type (e.g., Sqlite in sqlite.go) with actual database logic.
+In main.go, create an instance of the implementation (e.g., sqlite.New(cfg)) and assign it to a variable of type Storage.
+Pass this Storage variable to HTTP handlers (student.go), which use only the interface.
+This allows you to easily swap the storage backend (e.g., to in-memory, MySQL, etc.) by changing only the implementation in main.go, without modifying handler or business logic code.
+Benefits: flexibility, abstraction, and easier testing (can use mocks).
